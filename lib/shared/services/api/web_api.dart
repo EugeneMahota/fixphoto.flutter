@@ -1,5 +1,6 @@
 import 'package:tirmobile/shared/helper/helper.dart';
 import 'package:tirmobile/shared/models/login_response.dart';
+import 'package:tirmobile/shared/models/task.dart';
 import 'package:tirmobile/shared/models/user.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +8,7 @@ import 'dart:convert';
 
 abstract class WebApi {
   Future<LoginResponse> login(String login, String password);
+  Future<List<Task>> getTasks();
   Future<List<User>> getUsers();
 }
 
@@ -44,5 +46,15 @@ class WebApiService implements WebApi {
 
     final parsedJson = parseJsonToObject(result.body);
     return parsedJson.map<User>((json) => User.fromJson(json)).toList();
+  }
+
+  @override
+  Future<List<Task>> getTasks() async {
+    // final uri = Uri.http(_apiUrl, '/performer/tasks');
+    // final result = await http.get(uri, headers: _headers);
+
+    // final parsedJson = parseJsonToObject(result.body);
+    // return parsedJson.map<Task>((json) => Task.fromJson(json)).toList();
+    return [];
   }
 }

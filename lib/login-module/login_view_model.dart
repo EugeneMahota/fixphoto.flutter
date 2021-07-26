@@ -28,7 +28,7 @@ class LoginViewModel extends ChangeNotifier {
       if (loginResponse?.token == null) {
         throw 'Неизвестная ошибка!';
       }
-      // Navigator.pushNamed(context, '/jobs');
+      Navigator.pushNamed(context, '/tasks');
     } catch (error) {
       showError(context, error);
     }
