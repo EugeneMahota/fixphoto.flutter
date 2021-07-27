@@ -16,12 +16,12 @@ class TasksList extends StatelessWidget {
       child: ListView.builder(
         itemCount: tasks.length,
         itemBuilder: (BuildContext context, int index) =>
-            _taskTile(tasks[index], index + 1),
+            _taskTile(tasks[index], index + 1, context),
       ),
     );
   }
 
-  ListTile _taskTile(Task task, int index) {
+  ListTile _taskTile(Task task, int index, BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: AppColors().pink,
@@ -36,7 +36,7 @@ class TasksList extends StatelessWidget {
         child: Text(
             'Сделать до: ${DateFormat('dd.MM.yyyy HH:mm').format(task.executionTime)}'),
       ),
-      onTap: () => false,
+      onTap: () => Navigator.pushNamed(context, '/task', arguments: task),
     );
   }
 }

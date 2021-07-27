@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tirmobile/task-module/task_screen.dart';
 import 'package:tirmobile/tasks-module/tasks_screen.dart';
 import 'login-module/splash-screen/splash_screen.dart';
 import 'package:tirmobile/login-module/login_screen.dart';
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/splash-screen': (context) => SplashScreen(),
         '/login': (context) => LoginScreen(),
-        '/tasks': (context) => TasksScreen()
+        '/tasks': (context) => TasksScreen(),
+        '/task': (context) => TaskScreen(),
       },
     );
   }
