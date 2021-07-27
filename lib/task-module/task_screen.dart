@@ -51,6 +51,14 @@ class TaskScreenState extends State {
           _descriptionTask(task),
           _timeTask(task),
           _takePhotoButton(task),
+          model.pickedImage != null
+              ? Center(
+                  child: SizedBox(
+                    height: 200,
+                    child: Image.file(model.pickedImage),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );
@@ -105,7 +113,7 @@ class TaskScreenState extends State {
             color: AppColors().white,
           ),
         ),
-        onPressed: () => {},
+        onPressed: () => model.takePhoto(),
         color: AppColors().pink,
       ),
     );

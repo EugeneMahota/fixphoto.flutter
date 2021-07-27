@@ -12,11 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  http: ^0.12.2
+  http: ^0.13.3
   provider: ^5.0.0
   get_it: ^5.0.6
   splash_screen_view: ^3.0.0
   intl: ^0.17.0
+  image_picker: ^0.8.2
 
 dev_dependencies:
   flutter_test:
