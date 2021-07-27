@@ -55,6 +55,43 @@ class WebApiService implements WebApi {
 
     // final parsedJson = parseJsonToObject(result.body);
     // return parsedJson.map<Task>((json) => Task.fromJson(json)).toList();
-    return [];
+    return [
+      Task(
+        id: 1,
+        completed: false,
+        description: 'Создать фотоотчет по новому макету.',
+        executionTime: DateTime.now(),
+        performerId: 234,
+        photoCount: 234,
+        facilityId: 234,
+      ),
+      Task(
+        id: 2,
+        completed: false,
+        description: 'Показать последнией прафки от клиента.',
+        executionTime: DateTime.now(),
+        performerId: 234,
+        photoCount: 234,
+        facilityId: 234,
+      ),
+      Task(
+        id: 3,
+        completed: false,
+        description: 'Показать последние ответы клиента.',
+        executionTime: DateTime.now(),
+        performerId: 234,
+        photoCount: 234,
+        facilityId: 234,
+      ),
+      Task(
+        id: 4,
+        completed: true,
+        description: 'Согласовать макет с клиентом. Уточнить детали.',
+        executionTime: DateTime.now(),
+        performerId: 234,
+        photoCount: 234,
+        facilityId: 234,
+      ),
+    ];
   }
 }

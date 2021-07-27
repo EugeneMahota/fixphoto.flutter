@@ -96,7 +96,7 @@ class LoginScreenState extends State<LoginScreen> {
             'FIXPhoto',
             style: TextStyle(
               fontSize: 30,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w700,
               color: AppColors().pink,
             ),
           ),

@@ -13,7 +13,7 @@ class TasksScreen extends StatefulWidget {
 
 class TasksScreenState extends State {
   final TasksViewModel model = serviceLocator<TasksViewModel>();
-  final String pageTitle = 'Tasks';
+  final String pageTitle = 'Список задач';
 
   @override
   void initState() {
@@ -37,17 +37,21 @@ class TasksScreenState extends State {
     );
   }
 
-  Scaffold _tasksPage(TasksViewModel model) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors().pink,
-        title: Text(pageTitle),
+  Widget _tasksPage(TasksViewModel model) {
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors().pink,
+          title: Text(pageTitle),
+        ),
+        body: Column(
+          children: [
+            TasksList(tasks: model.tasks),
+          ],
+        ),
       ),
-      body: Column(
-        children: [
-          TasksList(tasks: model.tasks),
-        ],
-      ),
+      onWillPop: () async => false,
     );
   }
 }
