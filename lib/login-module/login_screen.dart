@@ -14,8 +14,10 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   LoginViewModel model = serviceLocator<LoginViewModel>();
 
-  final TextEditingController _loginController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _loginController =
+      TextEditingController(text: 'stasmina');
+  final TextEditingController _passwordController =
+      TextEditingController(text: 'stasmina123321');
 
   final Image logo = Image.asset('lib/assets/images/login-page-logo.png');
   final double padding = 15;

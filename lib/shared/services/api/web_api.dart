@@ -1,7 +1,6 @@
 import 'package:tirmobile/shared/helper/helper.dart';
 import 'package:tirmobile/shared/models/login_response.dart';
 import 'package:tirmobile/shared/models/task.dart';
-import 'package:tirmobile/shared/models/user.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,89 +8,42 @@ import 'dart:convert';
 abstract class WebApi {
   Future<LoginResponse> login(String login, String password);
   Future<List<Task>> getTasks();
-  Future<List<User>> getUsers();
 }
 
 class WebApiService implements WebApi {
   final _apiUrl = env['apiUrl'];
-  final Map<String, String> _headers = {'Authorization': ''};
+  final Map<String, String> _headers = {
+    'Authorization': '',
+    'Content-Type': 'application/json'
+  };
 
   @override
   Future<LoginResponse> login(String login, String password) async {
-    // final uri = Uri.http(_apiUrl, '/mobileAuth');
-    // final result = await http.post(
-    //   uri,
-    //   body: jsonEncode({
-    //     'login': login,
-    //     'password': password,
-    //   }),
-    //   headers: _headers,
-    // );
+    final uri = Uri.http(_apiUrl, '/mobileAuth');
+    final result = await http.post(
+      uri,
+      body: jsonEncode({
+        'login': login,
+        'password': password,
+      }),
+      headers: _headers,
+    );
 
-    // final parsed = jsonDecode(result.body);
-    // final LoginResponse loginResponse = LoginResponse.fromJson(parsed);
-    // _headers['Authorization'] = loginResponse.token;
-    // return loginResponse;
-    return LoginResponse.fromJson({'token': 'Hi'});
-  }
-
-  @override
-  Future<List<User>> getUsers() async {
-    final uri = Uri.http(_apiUrl, '/posts');
-    final result = await http.get(uri, headers: _headers);
-
-    if (result.statusCode == 401) {
-      print('getUser: status 401');
-    }
-
-    final parsedJson = parseJsonToObject(result.body);
-    return parsedJson.map<User>((json) => User.fromJson(json)).toList();
+    final parsed = jsonDecode(result.body);
+    final LoginResponse loginResponse = LoginResponse.fromJson(parsed);
+    _headers['Authorization'] = 'Bearer ${loginResponse.token}';
+    return loginResponse;
   }
 
   @override
   Future<List<Task>> getTasks() async {
-    // final uri = Uri.http(_apiUrl, '/performer/tasks');
-    // final result = await http.get(uri, headers: _headers);
+    final uri = Uri.http(_apiUrl, '/performer/tasks');
+    print('headers');
+    print(_headers);
+    final result = await http.get(uri, headers: _headers);
 
-    // final parsedJson = parseJsonToObject(result.body);
-    // return parsedJson.map<Task>((json) => Task.fromJson(json)).toList();
-    return [
-      Task(
-        id: 1,
-        completed: false,
-        description: 'Создать фотоотчет по новому макету.',
-        executionTime: DateTime.now(),
-        performerId: 234,
-        photoCount: 234,
-        facilityId: 234,
-      ),
-      Task(
-        id: 2,
-        completed: false,
-        description: 'Показать последнией прафки от клиента.',
-        executionTime: DateTime.now(),
-        performerId: 234,
-        photoCount: 234,
-        facilityId: 234,
-      ),
-      Task(
-        id: 3,
-        completed: false,
-        description: 'Показать последние ответы клиента.',
-        executionTime: DateTime.now(),
-        performerId: 234,
-        photoCount: 234,
-        facilityId: 234,
-      ),
-      Task(
-        id: 4,
-        completed: true,
-        description: 'Согласовать макет с клиентом. Уточнить детали.',
-        executionTime: DateTime.now(),
-        performerId: 234,
-        photoCount: 234,
-        facilityId: 234,
-      ),
-    ];
+    print(result.body);
+    final parsedJson = parseJsonToObject(result.body);
+    return parsedJson.map<Task>((json) => Task.fromJson(json)).toList();
   }
 }
