@@ -24,7 +24,7 @@ class Task {
       id: json['id'] as int,
       completed: json['completed'] as bool,
       description: json['description'] as String,
-      executionTime: json['executionTime'] as DateTime,
+      executionTime: DateTime.parse(json['executionTime']),
       performerId: json['performerId'] as int,
       photoCount: json['photoCount'] as int,
       facilityId: json['facilityId'] as int,

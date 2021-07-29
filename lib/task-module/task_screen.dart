@@ -14,6 +14,7 @@ class TaskScreen extends StatefulWidget {
 
 class TaskScreenState extends State {
   final TaskViewModel model = serviceLocator<TaskViewModel>();
+  final Image mockImage = Image.asset('lib/assets/images/mock-image.png');
 
   @override
   void initState() {
@@ -47,18 +48,10 @@ class TaskScreenState extends State {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _title(),
-          Divider(),
           _descriptionTask(task),
           _timeTask(task),
-          _takePhotoButton(task),
-          model.pickedImage != null
-              ? Center(
-                  child: SizedBox(
-                    height: 200,
-                    child: Image.file(model.pickedImage),
-                  ),
-                )
-              : Container(),
+          _image(),
+          _buttons(task),
         ],
       ),
     );
@@ -66,7 +59,7 @@ class TaskScreenState extends State {
 
   Widget _title() {
     return Padding(
-      padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+      padding: EdgeInsets.all(15),
       child: Text(
         '#Описание задачи',
         style: TextStyle(
@@ -103,18 +96,56 @@ class TaskScreenState extends State {
     );
   }
 
-  Widget _takePhotoButton(Task task) {
+  Widget _image() {
+    return model.pickedImage != null
+        ? _imageBox(Image.file(model.pickedImage))
+        : _imageBox(mockImage);
+  }
+
+  Widget _imageBox(Image image) {
     return Padding(
       padding: EdgeInsets.all(15),
-      child: MaterialButton(
-        child: Text(
-          'СДЕЛАТЬ ФОТО',
-          style: TextStyle(
-            color: AppColors().white,
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15.0),
+        child: SizedBox(
+          height: 250,
+          child: image,
         ),
-        onPressed: () => model.takePhoto(),
-        color: AppColors().pink,
+      ),
+    );
+  }
+
+  Widget _buttons(Task task) {
+    return Padding(
+      padding: EdgeInsets.only(left: 15),
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: MaterialButton(
+              child: Text(
+                model.pickedImage == null ? 'СНЯТЬ ФОТО' : 'ПЕРЕСНЯТЬ ФОТО',
+                style: TextStyle(
+                  color: AppColors().white,
+                ),
+              ),
+              onPressed: () => model.takePhoto(),
+              color: AppColors().pink,
+            ),
+          ),
+          model.pickedImage != null
+              ? MaterialButton(
+                  child: Text(
+                    'ОТПРАВИТЬ ФОТО',
+                    style: TextStyle(
+                      color: AppColors().white,
+                    ),
+                  ),
+                  onPressed: () => model.sendPhotoAndCompleteTask(task.id),
+                  color: AppColors().pink,
+                )
+              : Center(),
+        ],
       ),
     );
   }

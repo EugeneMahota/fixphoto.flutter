@@ -19,4 +19,8 @@ class TaskViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> sendPhotoAndCompleteTask(int taskId) async {
+    await _tasksService.completeTask(taskId, pickedImage);
+  }
 }
