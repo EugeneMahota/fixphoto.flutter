@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tirmobile/assets/styles/theme.dart';
 import 'package:tirmobile/shared/services/core/service_locator.dart';
 import 'package:tirmobile/shared/services/image_picker_service.dart';
 import 'package:tirmobile/shared/services/tasks_service.dart';
@@ -10,6 +11,8 @@ class TaskViewModel extends ChangeNotifier {
   final ImagePickerService _imagePicker = serviceLocator<ImagePickerService>();
 
   File _pickedImage;
+  bool isLoading = false;
+
   File get pickedImage => _pickedImage;
 
   Future<void> takePhoto() async {
@@ -20,7 +23,34 @@ class TaskViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> sendPhotoAndCompleteTask(int taskId) async {
-    await _tasksService.completeTask(taskId, pickedImage);
+  Future<void> sendPhotoAndCompleteTask(
+      int taskId, BuildContext context) async {
+    _startLoading();
+    try {
+      await _tasksService.completeTask(taskId, pickedImage);
+      Navigator.pushNamed(context, '/tasks');
+    } catch (err) {
+      _showErrorMessage(context);
+    }
+    _finishLoading();
+  }
+
+  _showErrorMessage(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: AppColors().backgroundRedError,
+        content: Text('Ошибка загруки изображения!'),
+      ),
+    );
+  }
+
+  void _startLoading() {
+    isLoading = true;
+    notifyListeners();
+  }
+
+  void _finishLoading() {
+    isLoading = false;
+    notifyListeners();
   }
 }

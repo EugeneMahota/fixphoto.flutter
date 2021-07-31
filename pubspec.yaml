@@ -19,6 +19,7 @@ dependencies:
   intl: ^0.17.0
   image_picker: ^0.8.2
   dio: ^4.0.0
+  flutter_launcher_icons: ^0.9.1
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +31,8 @@ flutter:
   assets:
     - .env
     - lib/assets/images/
+
+flutter_icons:
+  image_path: 'lib/assets/images/login-page-logo.png'
+  android: true
+  ios: false

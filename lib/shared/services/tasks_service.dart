@@ -5,7 +5,7 @@ import 'package:tirmobile/shared/services/api/web_api.dart';
 import 'package:tirmobile/shared/services/core/service_locator.dart';
 
 abstract class TasksServiceImpl {
-  Future<List<Task>> getTasks();
+  Future<List<Task>> getTasks([bool isReload]);
   Future<void> completeTask(int taskId, File image);
 }
 
@@ -14,8 +14,8 @@ class TasksService implements TasksServiceImpl {
   List<Task> _tasks;
 
   @override
-  Future<List<Task>> getTasks() async {
-    if (_tasks != null) {
+  Future<List<Task>> getTasks([bool isReload]) async {
+    if (_tasks != null && isReload == false) {
       return _tasks;
     }
 

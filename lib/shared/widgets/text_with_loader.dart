@@ -4,9 +4,13 @@ class TextWithLoader extends StatelessWidget {
   final String title;
   final bool isLoading;
   final double fontSize;
+  final Color color;
 
   TextWithLoader(
-      {@required this.title, @required this.isLoading, this.fontSize});
+      {@required this.title,
+      @required this.isLoading,
+      this.fontSize,
+      this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +22,7 @@ class TextWithLoader extends StatelessWidget {
               text: 'Loading...',
               style: TextStyle(
                 fontSize: fontSize,
+                color: color,
               ),
             ),
           ]))
@@ -25,6 +30,7 @@ class TextWithLoader extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: fontSize,
+              color: color,
             ),
           );
   }

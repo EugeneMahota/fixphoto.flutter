@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirmobile/assets/styles/theme.dart';
 import 'package:tirmobile/shared/services/core/service_locator.dart';
-import 'package:tirmobile/shared/widgets/title_with_loader.dart';
+import 'package:tirmobile/shared/widgets/text_with_loader.dart';
 import 'login_view_model.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -76,7 +76,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   Widget _logo() {
     return Padding(
-      padding: EdgeInsets.only(top: padding),
+      padding: EdgeInsets.only(top: 25),
       child: Center(
         child: Container(
           height: 80,

@@ -35,7 +35,6 @@ class WebApiService implements WebApi {
     final parsed = jsonDecode(result.body);
     final LoginResponse loginResponse = LoginResponse.fromJson(parsed);
     _headers['Authorization'] = 'Bearer ${loginResponse.token}';
-    print(_headers['Authorization']);
     return loginResponse;
   }
 
@@ -51,8 +50,6 @@ class WebApiService implements WebApi {
 
   @override
   Future<void> completeTask(int taskId, File image) async {
-    print(taskId);
-    print(image.path);
     final Dio dio = new Dio(
       BaseOptions(headers: {'Authorization': _headers['Authorization']}),
     );
@@ -62,7 +59,6 @@ class WebApiService implements WebApi {
       'images': await MultipartFile.fromFile(image.path,
           filename: 'Image: ${taskId.toString()}'),
     });
-    final response = await dio.post(url, data: formData);
-    print(response);
+    return await dio.post(url, data: formData);
   }
 }

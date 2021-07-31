@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tirmobile/assets/styles/theme.dart';
 import 'package:tirmobile/shared/services/core/service_locator.dart';
+import 'package:tirmobile/shared/widgets/text_with_loader.dart';
 import 'package:tirmobile/tasks-module/tasks_view_model.dart';
 import 'package:tirmobile/tasks-module/widgets/tasks_list.dart';
 
@@ -43,11 +44,19 @@ class TasksScreenState extends State {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: AppColors().pink,
-          title: Text(pageTitle),
+          title: TextWithLoader(title: pageTitle, isLoading: model.isLoading),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: () => model.reloadData(),
+            ),
+          ],
         ),
         body: Column(
           children: [
-            TasksList(tasks: model.tasks),
+            TasksList(
+              model: model,
+            ),
           ],
         ),
       ),

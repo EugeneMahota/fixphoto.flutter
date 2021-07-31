@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tirmobile/assets/styles/theme.dart';
 import 'package:tirmobile/shared/models/task.dart';
 import 'package:tirmobile/shared/services/core/service_locator.dart';
+import 'package:tirmobile/shared/widgets/text_with_loader.dart';
 import 'package:tirmobile/task-module/task_view_model.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -14,7 +15,6 @@ class TaskScreen extends StatefulWidget {
 
 class TaskScreenState extends State {
   final TaskViewModel model = serviceLocator<TaskViewModel>();
-  final Image mockImage = Image.asset('lib/assets/images/mock-image.png');
 
   @override
   void initState() {
@@ -33,12 +33,12 @@ class TaskScreenState extends State {
     return ChangeNotifierProvider<TaskViewModel>(
       create: (context) => model,
       child: Consumer<TaskViewModel>(
-        builder: (context, model, child) => _taskPage(model, task),
+        builder: (context, model, child) => _taskPage(model, task, context),
       ),
     );
   }
 
-  Widget _taskPage(TaskViewModel model, Task task) {
+  Widget _taskPage(TaskViewModel model, Task task, BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors().pink,
@@ -51,7 +51,7 @@ class TaskScreenState extends State {
           _descriptionTask(task),
           _timeTask(task),
           _image(),
-          _buttons(task),
+          _buttons(task, context),
         ],
       ),
     );
@@ -99,12 +99,12 @@ class TaskScreenState extends State {
   Widget _image() {
     return model.pickedImage != null
         ? _imageBox(Image.file(model.pickedImage))
-        : _imageBox(mockImage);
+        : Container();
   }
 
   Widget _imageBox(Image image) {
     return Padding(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.only(top: 15, left: 15),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15.0),
         child: SizedBox(
@@ -115,16 +115,16 @@ class TaskScreenState extends State {
     );
   }
 
-  Widget _buttons(Task task) {
+  Widget _buttons(Task task, BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 15),
+      padding: EdgeInsets.only(top: 15, left: 15),
       child: Row(
         children: [
           Padding(
             padding: EdgeInsets.only(right: 15),
             child: MaterialButton(
               child: Text(
-                model.pickedImage == null ? 'СНЯТЬ ФОТО' : 'ПЕРЕСНЯТЬ ФОТО',
+                model.pickedImage == null ? 'Сделать фото' : 'Переснять фото',
                 style: TextStyle(
                   color: AppColors().white,
                 ),
@@ -135,13 +135,13 @@ class TaskScreenState extends State {
           ),
           model.pickedImage != null
               ? MaterialButton(
-                  child: Text(
-                    'ОТПРАВИТЬ ФОТО',
-                    style: TextStyle(
-                      color: AppColors().white,
-                    ),
+                  child: TextWithLoader(
+                    title: 'Отправить фото',
+                    isLoading: model.isLoading,
+                    color: AppColors().white,
                   ),
-                  onPressed: () => model.sendPhotoAndCompleteTask(task.id),
+                  onPressed: () =>
+                      model.sendPhotoAndCompleteTask(task.id, context),
                   color: AppColors().pink,
                 )
               : Center(),
