@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tirmobile/assets/styles/theme.dart';
 import 'package:tirmobile/shared/services/auth_service.dart';
 import 'package:tirmobile/shared/services/core/service_locator.dart';
 
@@ -26,7 +27,7 @@ class LoginViewModel extends ChangeNotifier {
       }
       final loginResponse = await service.login(_login, _password);
       if (loginResponse?.token == null) {
-        throw 'Неизвестная ошибка!';
+        throw 'Ошибка авторизации!';
       }
       Navigator.pushNamed(context, '/tasks');
     } catch (error) {
@@ -36,17 +37,11 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   void showError(BuildContext context, String errorMessage) {
-    showDialog(
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(
-            'Ошибка',
-            style: TextStyle(color: Colors.red),
-          ),
-          content: Text(errorMessage),
-        );
-      },
-      context: context,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: AppColors().backgroundRedError,
+        content: Text(errorMessage),
+      ),
     );
   }
 

@@ -16,9 +16,16 @@ class TaskScreen extends StatefulWidget {
 class TaskScreenState extends State {
   final TaskViewModel model = serviceLocator<TaskViewModel>();
 
+  final TextEditingController _commentController =
+      TextEditingController(text: '');
+
   @override
   void initState() {
     super.initState();
+    _commentController.addListener(
+      () => model.commentListener(_commentController),
+    );
+    model.initForm(_commentController);
   }
 
   @override
@@ -44,13 +51,15 @@ class TaskScreenState extends State {
         backgroundColor: AppColors().pink,
         title: Text('Отправить фотоотчет'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _title(),
           _descriptionTask(task),
+          _quantityPhotos(task),
           _timeTask(task),
-          _image(),
+          _images(),
+          _commentField(task),
           _buttons(task, context),
         ],
       ),
@@ -96,57 +105,111 @@ class TaskScreenState extends State {
     );
   }
 
-  Widget _image() {
-    return model.pickedImage != null
-        ? _imageBox(Image.file(model.pickedImage))
+  Widget _quantityPhotos(Task task) {
+    return Padding(
+      padding: EdgeInsets.only(left: 15, right: 15, bottom: 5),
+      child: Text(
+        'Добавлено фото: ${model.pickedImages.length} из ${task.photoCount}',
+        style: TextStyle(
+          fontSize: 15,
+          color: AppColors().greySubtext,
+        ),
+      ),
+    );
+  }
+
+  Widget _images() {
+    final List<Widget> images = [];
+
+    for (final image in model.pickedImages) {
+      images.add(_imageBox(Image.file(image)));
+    }
+
+    return model.pickedImages.length > 0
+        ? Container(
+            margin: EdgeInsets.only(top: 15, bottom: 15),
+            height: 200.0,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: images,
+            ),
+          )
         : Container();
   }
 
   Widget _imageBox(Image image) {
     return Padding(
-      padding: EdgeInsets.only(top: 15, left: 15),
+      padding: EdgeInsets.only(left: 15, right: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15.0),
         child: SizedBox(
-          height: 250,
+          height: 200,
           child: image,
         ),
       ),
     );
   }
 
+  Widget _commentField(Task task) {
+    return model.pickedImages.length == task.photoCount
+        ? Padding(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 15),
+            child: CupertinoTextField(
+              prefix: _fieldIcon(CupertinoIcons.bubble_right),
+              keyboardType: TextInputType.text,
+              padding: _paddingField(),
+              placeholder: 'Комментарий',
+              controller: _commentController,
+            ),
+          )
+        : Container();
+  }
+
   Widget _buttons(Task task, BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 15, left: 15),
+      padding: EdgeInsets.only(left: 15, bottom: 15),
       child: Row(
         children: [
-          Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: MaterialButton(
-              child: Text(
-                model.pickedImage == null ? 'Сделать фото' : 'Переснять фото',
-                style: TextStyle(
-                  color: AppColors().white,
-                ),
-              ),
-              onPressed: () => model.takePhoto(),
-              color: AppColors().pink,
-            ),
-          ),
-          model.pickedImage != null
+          model.pickedImages.length != task.photoCount
               ? MaterialButton(
+                  child: Text(
+                    model.pickedImages.length < 0
+                        ? 'Сделать фото'
+                        : 'Добавить фото',
+                    style: TextStyle(
+                      color: AppColors().white,
+                    ),
+                  ),
+                  onPressed: () => model.takePhoto(),
+                  color: AppColors().pink,
+                )
+              : MaterialButton(
                   child: TextWithLoader(
-                    title: 'Отправить фото',
+                    title: 'Отправить',
                     isLoading: model.isLoading,
                     color: AppColors().white,
                   ),
                   onPressed: () =>
                       model.sendPhotoAndCompleteTask(task.id, context),
                   color: AppColors().pink,
-                )
-              : Center(),
+                ),
         ],
       ),
+    );
+  }
+
+  EdgeInsets _paddingField() {
+    return EdgeInsets.only(
+      top: 15,
+      bottom: 15,
+      left: 15,
+    );
+  }
+
+  Widget _fieldIcon(icon) {
+    return Padding(
+      padding: EdgeInsets.only(left: 15),
+      child: Icon(icon),
     );
   }
 }

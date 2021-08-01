@@ -10,7 +10,7 @@ import 'package:dio/dio.dart';
 abstract class WebApi {
   Future<LoginResponse> login(String login, String password);
   Future<List<Task>> getTasks();
-  Future<void> completeTask(int taskId, File image);
+  Future<void> completeTask(int taskId, List<File> images, String comment);
 }
 
 class WebApiService implements WebApi {
@@ -49,15 +49,22 @@ class WebApiService implements WebApi {
   }
 
   @override
-  Future<void> completeTask(int taskId, File image) async {
+  Future<void> completeTask(
+      int taskId, List<File> images, String comment) async {
     final Dio dio = new Dio(
       BaseOptions(headers: {'Authorization': _headers['Authorization']}),
     );
     final url = 'http://$_apiUrl/tasks/completed/$taskId';
+
+    final List<MultipartFile> files = [];
+    for (final image in images) {
+      final file = await MultipartFile.fromFile(image.path, filename: 'image');
+      files.add(file);
+    }
+
     final formData = FormData.fromMap({
-      'comment': 'Test comment',
-      'images': await MultipartFile.fromFile(image.path,
-          filename: 'Image: ${taskId.toString()}'),
+      'comment': comment,
+      'images': files,
     });
     return await dio.post(url, data: formData);
   }

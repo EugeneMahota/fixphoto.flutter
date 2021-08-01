@@ -6,7 +6,7 @@ import 'package:tirmobile/shared/services/core/service_locator.dart';
 
 abstract class TasksServiceImpl {
   Future<List<Task>> getTasks([bool isReload]);
-  Future<void> completeTask(int taskId, File image);
+  Future<void> completeTask(int taskId, List<File> image, String comment);
 }
 
 class TasksService implements TasksServiceImpl {
@@ -23,7 +23,7 @@ class TasksService implements TasksServiceImpl {
   }
 
   @override
-  Future<void> completeTask(int taskId, File image) {
-    return _webApi.completeTask(taskId, image);
+  Future<void> completeTask(int taskId, List<File> images, String comment) {
+    return _webApi.completeTask(taskId, images, comment);
   }
 }

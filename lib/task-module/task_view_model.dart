@@ -10,15 +10,19 @@ class TaskViewModel extends ChangeNotifier {
   final TasksService _tasksService = serviceLocator<TasksService>();
   final ImagePickerService _imagePicker = serviceLocator<ImagePickerService>();
 
+  String _comment;
   File _pickedImage;
+  List<File> _pickedImages = [];
   bool isLoading = false;
 
+  String get comment => _comment;
   File get pickedImage => _pickedImage;
+  List<File> get pickedImages => _pickedImages;
 
   Future<void> takePhoto() async {
     final XFile image = await _imagePicker.takePhoto();
     if (image != null) {
-      _pickedImage = File(image.path);
+      _pickedImages.add(File(image.path));
       notifyListeners();
     }
   }
@@ -27,7 +31,7 @@ class TaskViewModel extends ChangeNotifier {
       int taskId, BuildContext context) async {
     _startLoading();
     try {
-      await _tasksService.completeTask(taskId, pickedImage);
+      await _tasksService.completeTask(taskId, pickedImages, comment);
       Navigator.pushNamed(context, '/tasks');
     } catch (err) {
       _showErrorMessage(context);
@@ -42,6 +46,14 @@ class TaskViewModel extends ChangeNotifier {
         content: Text('Ошибка загруки изображения!'),
       ),
     );
+  }
+
+  void initForm(TextEditingController commentController) {
+    _comment = commentController.text;
+  }
+
+  void commentListener(TextEditingController commentController) {
+    _comment = commentController.text;
   }
 
   void _startLoading() {
